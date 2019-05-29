@@ -1110,8 +1110,6 @@ class UFOFontData(object):
                         try:
                             value = round(ast.literal_eval(
                                 childContour.attrib[transformTag]), 9)
-                            if int(value) == value:
-                                value = int(value)
                             dataList.append(str(value))
                         except KeyError:
                             pass
