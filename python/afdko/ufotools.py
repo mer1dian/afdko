@@ -16,7 +16,8 @@ except ImportError:
 from fontTools.misc.py23 import open, tobytes, tounicode, tostr, round
 from fontTools.ufoLib import UFOReader
 
-from psautohint.ufoFont import UFOFontData as psautohintUFOFontData
+from psautohint.ufoFont import (HashPointPen,
+                                UFOFontData as psautohintUFOFontData)
 
 from afdko import convertfonttocid, fdkutils
 
@@ -1105,12 +1106,14 @@ class UFOFontData(object):
                     etRoot = ET.ElementTree()
 
                     # Collect transformm fields, if any.
-                    for transformTag in ["xScale", "xyScale", "yxScale",
-                                         "yScale", "xOffset", "yOffset"]:
+                    for i, transformTag in enumerate(["xScale", "xyScale",
+                                                      "yxScale", "yScale",
+                                                      "xOffset", "yOffset"]):
                         try:
                             value = round(ast.literal_eval(
                                 childContour.attrib[transformTag]), 9)
-                            dataList.append(str(value))
+                            if value != HashPointPen.DEFAULT_TRANSFORM[i]:
+                                dataList.append(str(value))
                         except KeyError:
                             pass
                     componentXML = etRoot.parse(componentPath)
